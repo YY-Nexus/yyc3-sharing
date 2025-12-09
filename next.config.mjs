@@ -6,13 +6,44 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  images: {
-    domains: ['blob.v0.app'],
-    unoptimized: true
-  },
   experimental: {
-    optimizePackageImports: ['lucide-react']
-  }
-};
+    serverComponentsExternalPackages: ['sharp'],
+  },
+  images: {
+    domains: ['placeholder.svg'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+    unoptimized: true,
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/sw.js',
+        destination: '/api/sw',
+      },
+    ]
+  },
+  async headers() {
+    return [
+      {
+        source: '/sw.js',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/javascript',
+          },
+          {
+            key: 'Service-Worker-Allowed',
+            value: '/',
+          },
+        ],
+      },
+    ]
+  },
+}
 
-export default nextConfig;
+export default nextConfig
